@@ -37,12 +37,31 @@ export class ExpressVPN {
     }
 
     async connect() {
+        const connected = await this.isConnected()
+        if (connected) {
+            return
+        }
+
         const result = await execAsync(this.getCommand("connect"))
         this.logger(this.getLogLastLine(result))
     }
     
     async disconnect() {
+        const connected = await this.isConnected()
+        if (!connected) {
+            return
+        }
+
         const result = await execAsync(this.getCommand("disconnect"))
         this.logger(this.getLogLastLine(result))
+    }
+
+    async isConnected() {
+        const status = await this.status()
+        return !status.includes("VPN not connected")
+    }
+
+    async status() {
+        return await execAsync(this.getCommand("status"))
     }
 }
