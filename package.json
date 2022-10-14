@@ -1,0 +1,29 @@
+{
+  "name": "node-expressvpn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NUT-A/node-expressvpn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NUT-A/node-expressvpn/issues"
+  },
+  "homepage": "https://github.com/NUT-A/node-expressvpn#readme",
+  "devDependencies": {
+    "@types/node": "^18.8.5"
+  }
+}
