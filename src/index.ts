@@ -2,6 +2,8 @@ import { exec } from "child_process"
 import { platform } from 'node:process';
 import path from "path";
 
+const isReachable = require('is-reachable');
+
 async function execAsync(command: string) {
     return new Promise<string>((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
@@ -36,6 +38,26 @@ export class ExpressVPN {
         }
     }
 
+    private async isOnline() {
+        return await isReachable('https://google.com');
+    }
+
+    private async waitForInternetConnection() {
+        this.logger("Waiting for internet connection...")
+        var attempts = 0
+
+        while (!(await this.isOnline()) && attempts < 10) {
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            attempts++
+        }
+
+        if (attempts >= 10) {
+            throw new Error("Unable to connect to internet")
+        }
+
+        this.logger("Internet connection established")
+    }
+
     async connect() {
         const connected = await this.isConnected()
         if (connected) {
@@ -44,6 +66,8 @@ export class ExpressVPN {
 
         const result = await execAsync(this.getCommand("connect"))
         this.logger(this.getLogLastLine(result))
+
+        await this.waitForInternetConnection()
     }
     
     async disconnect() {
